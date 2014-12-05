@@ -11,6 +11,7 @@ var modifyDate = require('../../helpers/modifyDateFormatter');
 var path = require('path');
 var fs = require('fs');
 var browserSync = require('browser-sync');
+var through2 = require('through2');
 
 /**
  * Jade compilation of pages templates.
@@ -85,11 +86,16 @@ module.exports = function(buildOptions) {
 
     return gulp.task('compile-templates', function(cb) {
 
+        var modulesData, error;
+
+        try {
+            modulesData = concatModulesData();
+        } catch(er) {
+            error = er;
+        }
+
         gulp.src(['./markup/pages/**/*.jade', '!./markup/pages/**/_*.jade'])
-            .pipe(jade({
-                pretty: true,
-                locals: concatModulesData()
-            }))
+            .pipe(error ? through2(function () {this.emit("error", error)}) : jade({ pretty: true, locals: concatModulesData()}))
             .on('error', notify.onError(function (error) {
                 return 'An error occurred while compiling jade.\nLook in the console for details.\n' + error;
             }))
