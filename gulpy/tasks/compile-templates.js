@@ -4,8 +4,8 @@ var data = require('gulp-data');
 var gulpif = require('gulp-if');
 var gutil = require('gulp-util');
 var notify = require('gulp-notify');
-var projectConfig = require('../../../tars-config');
-var notifyConfig = projectConfig.notifyConfig;
+var tarsConfig = require('../../../tars-config');
+var notifyConfig = tarsConfig.notifyConfig;
 var replace = require('gulp-replace-task');
 var modifyDate = require('../../helpers/modifyDateFormatter');
 var path = require('path');
@@ -80,7 +80,7 @@ module.exports = function(buildOptions) {
     patterns.push(
         {
             match: '%=staticPrefix=%',
-            replacement: projectConfig.staticPrefix
+            replacement: tarsConfig.staticPrefix
         }
     );
 
