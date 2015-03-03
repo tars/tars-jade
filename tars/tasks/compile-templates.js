@@ -1,13 +1,11 @@
 var gulp = require('gulp');
 var jade = require('gulp-jade');
 var data = require('gulp-data');
-var gulpif = require('gulp-if');
 var gutil = require('gulp-util');
 var notify = require('gulp-notify');
 var tarsConfig = require('../../../tars-config');
-var notifyConfig = tarsConfig.notifyConfig;
 var replace = require('gulp-replace-task');
-var modifyDate = require('../../helpers/modify-date-formatter');
+var notifier = require('../../helpers/notifier');
 var path = require('path');
 var fs = require('fs');
 var browserSync = require('browser-sync');
@@ -109,17 +107,7 @@ module.exports = function(buildOptions) {
             .pipe(gulp.dest('./dev/'))
             .pipe(browserSync.reload({stream:true}))
             .pipe(
-                gulpif(notifyConfig.useNotify,
-                    notify({
-                        onLast: true,
-                        sound: notifyConfig.sounds.onSuccess,
-                        title: notifyConfig.title,
-                        message: 'Templates\'ve been compiled \n'+ notifyConfig.taskFinishedText +'<%= options.date %>',
-                        templateOptions: {
-                            date: modifyDate.getTimeOfModify()
-                        }
-                    })
-                )
+                notifier('Templates\'ve been compiled')
             );
         cb(null);
     });
