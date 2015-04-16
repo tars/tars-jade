@@ -16,10 +16,10 @@ var through2 = require('through2');
  * Templates with _ prefix won't be compiled
  * @param  {Object} buildOptions
  */
-module.exports = function(buildOptions) {
+module.exports = function (buildOptions) {
 
     function concatModulesData(module) {
-        eval('var readyModulesData = {' + fs.readFileSync('./dev/temp/modulesData.js', "utf8") + '}');
+        eval('var readyModulesData = {' + fs.readFileSync('./dev/temp/modulesData.js', 'utf8') + '}');
         return readyModulesData;
     }
 
@@ -73,18 +73,18 @@ module.exports = function(buildOptions) {
         }
     );
 
-    return gulp.task('html:compile-templates', function(cb) {
+    return gulp.task('html:compile-templates', function (cb) {
 
         var modulesData, error;
 
         try {
             modulesData = concatModulesData();
-        } catch(er) {
+        } catch (er) {
             error = er;
         }
 
         gulp.src(['./markup/pages/**/*.jade', '!./markup/pages/**/_*.jade'])
-            .pipe(error ? through2(function () {this.emit('error', '\nAn error occurred while modules data processing:\n' + error)}) : jade({ pretty: true, locals: concatModulesData()}))
+            .pipe(error ? through2(function () {this.emit('error', '\nAn error occurred while modules data processing:\n' + error);}) : jade({ pretty: true, locals: concatModulesData() }))
             .on('error', notify.onError(function (error) {
                 return 'An error occurred while compiling jade.\nLook in the console for details.\n' + error;
             }))
@@ -96,7 +96,7 @@ module.exports = function(buildOptions) {
                 return 'An error occurred while replacing placeholdres.\nLook in the console for details.\n' + error;
             }))
             .pipe(gulp.dest('./dev/'))
-            .pipe(browserSync.reload({stream:true}))
+            .pipe(browserSync.reload({ stream: true }))
             .pipe(
                 notifier('Templates\'ve been compiled')
             );
