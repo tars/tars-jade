@@ -88,6 +88,9 @@ module.exports = function (buildOptions) {
             .on('error', notify.onError(function (error) {
                 return 'An error occurred while compiling jade.\nLook in the console for details.\n' + error;
             }))
+            .on('error', function () {
+                this.emit('end');
+            })
             .pipe(replace({
               patterns: patterns,
               usePrefix: false
