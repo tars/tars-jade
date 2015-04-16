@@ -92,8 +92,8 @@ module.exports = function (buildOptions) {
                 this.emit('end');
             })
             .pipe(replace({
-              patterns: patterns,
-              usePrefix: false
+                patterns: patterns,
+                usePrefix: false
             }))
             .on('error', notify.onError(function (error) {
                 return 'An error occurred while replacing placeholdres.\nLook in the console for details.\n' + error;
