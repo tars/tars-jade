@@ -83,7 +83,7 @@ module.exports = function (buildOptions) {
             error = er;
         }
 
-        gulp.src(['./markup/pages/**/*.jade', '!./markup/pages/**/_*.jade'])
+        return gulp.src(['./markup/pages/**/*.jade', '!./markup/pages/**/_*.jade'])
             .pipe(error ? through2(function () {this.emit('error', '\nAn error occurred while modules data processing:\n' + error);}) : jade({ pretty: true, locals: concatModulesData() }))
             .on('error', notify.onError(function (error) {
                 return 'An error occurred while compiling jade.\nLook in the console for details.\n' + error;
@@ -103,6 +103,5 @@ module.exports = function (buildOptions) {
             .pipe(
                 notifier('Templates\'ve been compiled')
             );
-        cb(null);
     });
 };
