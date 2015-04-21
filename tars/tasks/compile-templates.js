@@ -18,8 +18,22 @@ var through2 = require('through2');
  */
 module.exports = function (buildOptions) {
 
-    function concatModulesData(module) {
-        eval('var readyModulesData = {' + fs.readFileSync('./dev/temp/modulesData.js', 'utf8') + '}');
+    function concatModulesData() {
+        var dataEntry,
+            readyModulesData;
+
+        try {
+            dataEntry = fs.readFileSync('./dev/temp/modulesData.js', 'utf8');
+        } catch (er) {
+            dataEntry = false;
+        }
+
+        if (dataEntry) {
+            eval('readyModulesData = {' + dataEntry + '}');
+        } else {
+            readyModulesData = '{}';
+        }
+
         return readyModulesData;
     }
 
@@ -81,10 +95,20 @@ module.exports = function (buildOptions) {
             modulesData = concatModulesData();
         } catch (er) {
             error = er;
+            modulesData = false;
         }
 
         return gulp.src(['./markup/pages/**/*.jade', '!./markup/pages/**/_*.jade'])
-            .pipe(error ? through2(function () {this.emit('error', '\nAn error occurred while modules data processing:\n' + error);}) : jade({ pretty: true, locals: concatModulesData() }))
+            .pipe(
+                modulesData
+                    ? jade({ pretty: true, locals: concatModulesData() })
+                    : through2.obj(
+                        function () {
+                            console.log(gutil.colors.red('An error occurred with data-files!'));
+                            this.emit('error', error);
+                        }
+                    )
+            )
             .on('error', notify.onError(function (error) {
                 return 'An error occurred while compiling jade.\nLook in the console for details.\n' + error;
             }))
