@@ -12,10 +12,13 @@ head
 body.page
 
     section.page__wrapper
-        
+
         //- Include your modules here
 
         .page__buffer
 
     .page__footer
         +footer()
+
+    //- Main scripts. You can replace it, but I recommend you to leave it here
+    script(src='%=staticPrefix=%js/main%=hash=%%=min=%.js')
