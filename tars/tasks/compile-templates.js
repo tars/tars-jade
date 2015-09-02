@@ -1,91 +1,95 @@
-var gulp = require('gulp');
-var jade = require('gulp-jade');
-var data = require('gulp-data');
-var gutil = require('gulp-util');
-var notify = require('gulp-notify');
-var tarsConfig = require('../../../tars-config');
-var replace = require('gulp-replace-task');
-var notifier = require('../../helpers/notifier');
+'use strict';
+
+var gulp = tars.packages.gulp;
+var gutil = tars.packages.gutil;
+var jade = tars.packages.jade;
+var data = tars.packages.data;
+var replace = tars.packages.replace;
+var through2 = tars.packages.through2;
 var path = require('path');
 var fs = require('fs');
-var browserSync = require('browser-sync');
-var through2 = require('through2');
+var notify = tars.packages.notify;
+var notifier = tars.helpers.notifier;
+var browserSync = tars.packages.browserSync;
+
+/**
+ * Concat all data for all modules to one file
+ * @return {Object} Object with data for modules
+ */
+function concatModulesData() {
+    var dataEntry;
+    var readyModulesData;
+
+    try {
+        dataEntry = fs.readFileSync('./dev/temp/modulesData.js', 'utf8');
+    } catch (er) {
+        dataEntry = false;
+    }
+
+    if (dataEntry) {
+        eval('readyModulesData = {' + dataEntry + '}');
+    } else {
+        readyModulesData = '{}';
+    }
+
+    return readyModulesData;
+}
+
+var patterns = [];
+
+if (!tars.flags.ie8) {
+    patterns.push(
+        {
+            match: '<link href="%=staticFolder=%css/main_ie8%=hash=%%=min=%.css" rel="stylesheet" type="text/css">',
+            replacement: ''
+        }
+    );
+}
+
+if (tars.flags.min || tars.flags.release) {
+    patterns.push(
+        {
+            match: '%=min=%',
+            replacement: '.min'
+        }
+    );
+} else {
+    patterns.push(
+        {
+            match: '%=min=%',
+            replacement: ''
+        }
+    );
+}
+
+if (tars.flags.release) {
+    patterns.push(
+        {
+            match: '%=hash=%',
+            replacement: tars.options.build.hash
+        }
+    );
+} else {
+    patterns.push(
+        {
+            match: '%=hash=%',
+            replacement: ''
+        }
+    );
+}
+
+patterns.push(
+    {
+        match: '%=staticPrefix=%',
+        replacement: tars.config.staticPrefix
+    }
+);
 
 /**
  * Jade compilation of pages templates.
  * Templates with _ prefix won't be compiled
- * @param  {Object} buildOptions
  */
-module.exports = function (buildOptions) {
-
-    function concatModulesData() {
-        var dataEntry,
-            readyModulesData;
-
-        try {
-            dataEntry = fs.readFileSync('./dev/temp/modulesData.js', 'utf8');
-        } catch (er) {
-            dataEntry = false;
-        }
-
-        if (dataEntry) {
-            eval('readyModulesData = {' + dataEntry + '}');
-        } else {
-            readyModulesData = '{}';
-        }
-
-        return readyModulesData;
-    }
-
-    var patterns = [];
-
-    if (!gutil.env.ie8) {
-        patterns.push(
-            {
-                match: '<link href="%=staticFolder=%/css/main_ie8%=hash=%%=min=%.css" rel="stylesheet" type="text/css">',
-                replacement: ''
-            }
-        );
-    }
-
-    if (gutil.env.min || gutil.env.release) {
-        patterns.push(
-            {
-                match: '%=min=%',
-                replacement: '.min'
-            }
-        );
-    } else {
-        patterns.push(
-            {
-                match: '%=min=%',
-                replacement: ''
-            }
-        );
-    }
-
-    if (gutil.env.release) {
-        patterns.push(
-            {
-                match: '%=hash=%',
-                replacement: buildOptions.hash
-            }
-        );
-    } else {
-        patterns.push(
-            {
-                match: '%=hash=%',
-                replacement: ''
-            }
-        );
-    }
-
-    patterns.push(
-        {
-            match: '%=staticPrefix=%',
-            replacement: tarsConfig.staticPrefix
-        }
-    );
+module.exports = function () {
 
     return gulp.task('html:compile-templates', function (cb) {
 
