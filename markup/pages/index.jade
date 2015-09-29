@@ -5,6 +5,7 @@ doctype html
 |<!--[if (gt IE 9)|!(IE)]><!--><html class="no-js" lang="ru"><!--<![endif]-->
 
 include ../modules/head/head
+include ../modules/example/example
 include ../modules/footer/footer
 
 head
@@ -14,6 +15,7 @@ body.page
     section.page__wrapper
 
         //- Include your modules here
+        +example()
 
         .page__buffer
 
