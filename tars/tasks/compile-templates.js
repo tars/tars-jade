@@ -8,7 +8,7 @@ var replace = tars.packages.replace;
 var through2 = tars.packages.through2;
 var path = require('path');
 var fs = require('fs');
-var notify = tars.packages.notify;
+var plumber = tars.packages.plumber;
 var notifier = tars.helpers.notifier;
 var browserSync = tars.packages.browserSync;
 
@@ -112,28 +112,24 @@ module.exports = function () {
         }
 
         return gulp.src(['./markup/pages/**/*.jade', '!./markup/pages/**/_*.jade'])
+            .pipe(plumber({
+                    errorHandler: function (error) {
+                        notifier.error('An error occurred while compiling jade.', error);
+                        this.emit('end');
+                    }
+            }))
             .pipe(
                 modulesData
                     ? jade({ pretty: true, locals: concatModulesData() })
                     : through2.obj(
                         function () {
-                            console.log(gutil.colors.red('An error occurred with data-files!'));
-                            this.emit('error', error);
+                            this.emit('error', new Error('An error occurred with data-files!\n' + error));
                         }
                     )
             )
-            .on('error', notify.onError(function (error) {
-                return 'An error occurred while compiling jade.\nLook in the console for details.\n' + error;
-            }))
-            .on('error', function () {
-                this.emit('end');
-            })
             .pipe(replace({
                 patterns: patterns,
                 usePrefix: false
-            }))
-            .on('error', notify.onError(function (error) {
-                return 'An error occurred while replacing placeholdres.\nLook in the console for details.\n' + error;
             }))
             .pipe(gulp.dest('./dev/'))
             .pipe(browserSync.reload({ stream: true }))
