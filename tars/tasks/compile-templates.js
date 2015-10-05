@@ -134,7 +134,7 @@ module.exports = function () {
             .pipe(gulp.dest('./dev/'))
             .pipe(browserSync.reload({ stream: true }))
             .pipe(
-                notifier('Templates\'ve been compiled')
+                notifier.success('Templates\'ve been compiled')
             );
     });
 };
