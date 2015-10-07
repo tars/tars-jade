@@ -37,16 +37,16 @@ function concatModulesData() {
 
 var patterns = [];
 
-if (!tars.flags.ie8 || !tars.flags.ie) {
+if (!tars.flags.ie8 && !tars.flags.ie) {
     patterns.push(
         {
-            match: '<link href="%=staticFolder=%css/main_ie8%=hash=%%=min=%.css" rel="stylesheet" type="text/css">',
+            match: '<link href="%=staticPrefix=%css/main_ie8%=hash=%%=min=%.css" rel="stylesheet" type="text/css">',
             replacement: ''
         }
     );
 }
 
-if (!tars.flags.ie9 || !tars.flags.ie) {
+if (!tars.flags.ie9 && !tars.flags.ie) {
     patterns.push(
         {
             match: '<link href="%=staticPrefix=%css/main_ie9%=hash=%%=min=%.css" rel="stylesheet" type="text/css">',
