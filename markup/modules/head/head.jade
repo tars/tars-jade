@@ -1,30 +1,29 @@
 mixin head(data)
     meta(charset="utf-8")
-    |<title>#{data.title}</title>
-    meta(content="" name="author")
-    meta(content="" name="description")
-    meta(content="" name="keywords")
-    meta(content="telephone=no" name="format-detection")
-    meta(name="robots" content="noodp, noydir")
-    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    meta(http-equiv="x-ua-compatible", content="ie=edge")
+    title #{data.title}
+    meta(content="", name="description")
+    meta(content="", name="keywords")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(content="telephone=no", name="format-detection")
     //- This make sence for mobile browsers. It means, that content has been optimized for mobile browsers
-    meta(name="HandheldFriendly" content="true")
-    |<meta content="IE=edge" http-equiv="X-UA-Compatible">
+    meta(name="HandheldFriendly", content="true")
+
     |<!--[if IE 8 ]><link href="%=staticPrefix=%css/main_ie8%=hash=%%=min=%.css" rel="stylesheet" type="text/css"><![endif]-->
     |<!--[if IE 9 ]><link href="%=staticPrefix=%css/main_ie9%=hash=%%=min=%.css" rel="stylesheet" type="text/css"><![endif]-->
     |<!--[if (gt IE 9)|!(IE)]><!--><link href="%=staticPrefix=%css/main%=hash=%%=min=%.css" rel="stylesheet" type="text/css"><!--<![endif]-->
 
     if data.useSocialMetaTags
-        meta(property="og:title" content="#{data.title}")
-        |<meta property="og:title" content="" />
-        |<meta property="og:url" content="" />
-        |<meta property="og:description" content="" />
-        |<meta property="og:image" content="" />
-        |<meta property="og:image:type" content="image/jpeg" />
-        |<meta property="og:image:width" content="500" />
-        |<meta property="og:image:height" content="300" />
-        |<meta property="twitter:description" content="" />
-        |<link rel="image_src" href="" />
+        meta(property="og:title", content="#{data.title}")
+        meta(property="og:title", content="")
+        meta(property="og:url", content="")
+        meta(property="og:description", content="")
+        meta(property="og:image", content="")
+        meta(property="og:image:type", content="image/jpeg")
+        meta(property="og:image:width", content="500")
+        meta(property="og:image:height", content="300")
+        meta(property="twitter:description", content="")
+        link(rel="image_src", href="")
 
     link(rel="icon" type="image/png" href="favicon.ico")
     script.

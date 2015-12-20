@@ -1,27 +1,23 @@
 doctype html
-|<!--[if IE 7]><html class="ie7 lt-ie10 lt-ie9 lt-ie8 no-js" lang="ru"><![endif]-->
-|<!--[if IE 8]><html class="ie8 lt-ie10 lt-ie9 no-js" lang="ru"><![endif]-->
-|<!--[if IE 9 ]><html class="ie9 lt-ie10 no-js" lang="ru"><![endif]-->
-|<!--[if (gt IE 9)|!(IE)]><!--><html class="no-js" lang="ru"><!--<![endif]-->
+html(class="no-js", lang="ru")
 
-include ../modules/head/head
-include ../modules/example/example
-include ../modules/footer/footer
+    include ../modules/head/head
+    include ../modules/example/example
+    include ../modules/footer/footer
 
-head
-    +head(head.defaults)
-body.page
+    head
+        +head(head.defaults)
+    body.page
 
-    section.page__wrapper
+        section.page__wrapper
 
-        //- Include your modules here
-        +example()
+            //- Include your modules here
+            +example()
 
-        .page__buffer
+            .page__buffer
 
-    .page__footer
-        +footer()
+        .page__footer
+            +footer()
 
-    //- Main scripts. You can replace it, but I recommend you to leave it here
-    script(src='%=staticPrefix=%js/main%=hash=%%=min=%.js')
-|</html>
+        //- Main scripts. You can replace it, but I recommend you to leave it here
+        script(src='%=staticPrefix=%js/main%=hash=%%=min=%.js')
