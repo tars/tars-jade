@@ -7,6 +7,7 @@ html(class="no-js", lang="ru")
     head
         +head(head.defaults)
     body.page
+        |%=symbols=%
 
         section.page__wrapper
 
@@ -16,6 +17,9 @@ html(class="no-js", lang="ru")
 
         .page__footer
             +footer()
+
+        script(src='%=static=%js/separate-js/svg4everybody.min.js')
+        script svg4everybody();
 
         //- Main scripts. You can replace it, but I recommend you to leave it here
         script(src='%=static=%js/main%=hash=%%=min=%.js')
